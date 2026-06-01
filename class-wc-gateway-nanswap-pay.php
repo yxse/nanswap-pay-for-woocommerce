@@ -27,7 +27,9 @@ if (!defined('ABSPATH'))
 }
 
 if (version_compare(phpversion(), '7.1', '>=')) {
+    // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set
     ini_set('precision', 14);
+    // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set
     ini_set('serialize_precision', 14);
 }
 
@@ -135,7 +137,7 @@ function nanswap_pay_gateway_init()
         {
             global $woocommerce;
             $this->id = 'nanswap_pay_gateway';
-            $this->icon = apply_filters('woocommerce_nanswap_pay_icon', 'https://images.nanswap.com/logo/pay-in-crypto-white.svg');
+            $this->icon = apply_filters('woocommerce_nanswap_pay_icon', NANSWAP_PAY_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/pay-in-crypto.svg');
             $this->has_fields = false;
             $this->method_title = __('Nanswap Pay', 'nanswap-pay-for-woocommerce-main');
             $this->method_description = __( 'Allows Cryptocurrency payments via Nanswap Pay.', 'nanswap-pay-for-woocommerce-main' );
@@ -461,14 +463,13 @@ function nanswap_pay_gateway_init()
         }
 
         function get_np_webhook_signature() {
-            $this->log('$_SERVER:'.print_r($_SERVER, true));
-
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
             if (isset($_SERVER['HTTP_X_NANSWAP_SIG']) && !empty($_SERVER['HTTP_X_NANSWAP_SIG'])) {
-                return trim($_SERVER['HTTP_X_NANSWAP_SIG']);
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+                return trim(sanitize_text_field(wp_unslash($_SERVER['HTTP_X_NANSWAP_SIG'])));
             }
 
             $all_headers = getallheaders();
-            $this->log('$all_headers:'.print_r($all_headers, true));
 
             foreach ($all_headers as $key => $value) {
                 $this->log('header:'."$key - $value");
@@ -523,10 +524,10 @@ function nanswap_pay_gateway_init()
                 $request_json = file_get_contents('php://input');
                 $this->log('$request_json:'.$request_json);
                 $request_data = json_decode($request_json, true);
-                $this->log('$request_data:'.print_r($request_data, true));
+                $this->log('$request_data:'. wp_json_encode($request_data));
                 ksort($request_data);
                 $sorted_request_json = json_encode($request_data);
-                $this->log('$sorted_request_json:'.print_r($sorted_request_json, true));
+                $this->log('$sorted_request_json:'. $sorted_request_json);
 
                 if ($request_json !== false && !empty($request_json)) {
                     $hmac = hash_hmac("sha512", $sorted_request_json, trim($this->webhook_secret));
@@ -625,6 +626,8 @@ function nanswap_pay_gateway_init()
         {
             @ob_clean();
             if ($this->check_webhook_request_is_valid()) {
+                // Webhook payload is authenticated via HMAC signature — nonce not applicable.
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing
                 $this->successful_request($_POST);
             } else {
                 wp_die("Nanswap Pay Webhook Request Failure");
