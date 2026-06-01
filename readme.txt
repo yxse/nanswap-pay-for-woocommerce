@@ -1,10 +1,13 @@
 === Nanswap Pay Crypto Payment Gateway for WooCommerce ===
 Contributors: Nanswap
 Tags: nano, bitcoin, litecoin, payments, nanswap, cryptocurrency, payment gateway
-Requires at least:       5.5
-Tested up to:            5.9.3
-WC requires at least:    4.9.4
-WC tested up to:         10.8.1
+Requires at least: 5.5
+Tested up to: 7.0
+Stable tag: 1.0.0
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+WC requires at least: 4.9.4
+WC tested up to: 10.8.1
 
 Nanswap Pay is a service that allows users to accept online crypto payments with numerous supported cryptocurrencies. The crypto payment gateway can be added easily to websites, social media accounts, and the largest e-commerce platforms by using cryptocurrency payment plugins.
 
