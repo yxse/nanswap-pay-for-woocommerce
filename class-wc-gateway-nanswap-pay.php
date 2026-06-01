@@ -10,7 +10,7 @@
  * Author URI:              https://nanswap.com/
  * License:                 GPL-2.0-or-later
  * License URI:             https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:             nanswap-pay-woocommerce-main
+ * Text Domain:             nanswap-pay-for-woocommerce-main
  * Requires at least:       5.5
  * Tested up to:            7.0
  * WC requires at least:    4.9.4
@@ -70,8 +70,8 @@ add_filter( 'woocommerce_payment_gateways', 'nanswap_pay_add_to_gateways' );
 function nanswap_pay_gateway_plugin_links( $links ) {
 
 	$plugin_links = array(
-		'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=nanswap_pay_gateway' ) . '">' . __( 'Configure', 'nanswap-pay-woocommerce-main' ) . '</a>',
-        '<a href="mailto:contact@nanswap.com">' . __( 'Email Support', 'nanswap-pay-woocommerce-main' ) . '</a>'
+		'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=nanswap_pay_gateway' ) . '">' . __( 'Configure', 'nanswap-pay-for-woocommerce-main' ) . '</a>',
+        '<a href="mailto:contact@nanswap.com">' . __( 'Email Support', 'nanswap-pay-for-woocommerce-main' ) . '</a>'
 	);
 
 	return array_merge( $plugin_links, $links );
@@ -137,8 +137,8 @@ function nanswap_pay_gateway_init()
             $this->id = 'nanswap_pay_gateway';
             $this->icon = apply_filters('woocommerce_nanswap_pay_icon', 'https://images.nanswap.com/logo/pay-in-crypto-white.svg');
             $this->has_fields = false;
-            $this->method_title = __('Nanswap Pay', 'nanswap-pay-woocommerce-main');
-            $this->method_description = __( 'Allows Cryptocurrency payments via Nanswap Pay.', 'nanswap-pay-woocommerce-main' );
+            $this->method_title = __('Nanswap Pay', 'nanswap-pay-for-woocommerce-main');
+            $this->method_description = __( 'Allows Cryptocurrency payments via Nanswap Pay.', 'nanswap-pay-for-woocommerce-main' );
             $this->webhook_url = add_query_arg('wc-api', 'Nanswap_Pay_WC_Gateway', home_url('/'));
 
             // Load the settings.
@@ -180,7 +180,7 @@ function nanswap_pay_gateway_init()
          */
         public function get_icon() {
             $icon_url  = plugins_url( 'assets/images/pay-in-crypto.svg', __FILE__ );
-            $icon_html = '<img src="' . esc_url( $icon_url ) . '" alt="' . esc_attr__( 'Pay in crypto using Nanswap Pay', 'nanswap-pay-woocommerce-main' ) . '" style="width: 200px;" />';
+            $icon_html = '<img src="' . esc_url( $icon_url ) . '" alt="' . esc_attr__( 'Pay in crypto using Nanswap Pay', 'nanswap-pay-for-woocommerce-main' ) . '" style="width: 200px;" />';
             return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
         }
 
@@ -209,7 +209,7 @@ function nanswap_pay_gateway_init()
 
         public function validate_invoice_prefix_field( $key, $value ) {
             if ( isset( $value ) && !$this->does_not_end_with_number($value)) {
-                WC_Admin_Settings::add_error( esc_html__( 'Invoice prefix must not end with a digit.', 'nanswap-pay-woocommerce-main'));
+                WC_Admin_Settings::add_error( esc_html__( 'Invoice prefix must not end with a digit.', 'nanswap-pay-for-woocommerce-main'));
             }
 
             return $value;
@@ -440,8 +440,8 @@ function nanswap_pay_gateway_init()
         public function admin_options()
         {
             ?>
-            <h3><?php esc_html_e('Nanswap Pay', 'nanswap-pay-woocommerce-main'); ?></h3>
-            <p><?php esc_html_e('Completes checkout via Nanswap Pay', 'nanswap-pay-woocommerce-main'); ?></p>
+            <h3><?php esc_html_e('Nanswap Pay', 'nanswap-pay-for-woocommerce-main'); ?></h3>
+            <p><?php esc_html_e('Completes checkout via Nanswap Pay', 'nanswap-pay-for-woocommerce-main'); ?></p>
 
             <?php if ($this->is_valid_for_use()) : ?>
 
@@ -454,7 +454,7 @@ function nanswap_pay_gateway_init()
 
             <?php else : ?>
                 <div class="inline error">
-                    <p><strong><?php esc_html_e('Gateway Disabled', 'nanswap-pay-woocommerce-main'); ?></strong>: <?php esc_html_e('Nanswap Pay does not support your store currency.', 'nanswap-pay-woocommerce-main'); ?></p>
+                    <p><strong><?php esc_html_e('Gateway Disabled', 'nanswap-pay-for-woocommerce-main'); ?></strong>: <?php esc_html_e('Nanswap Pay does not support your store currency.', 'nanswap-pay-for-woocommerce-main'); ?></p>
                 </div>
             <?php endif;
 
@@ -567,7 +567,7 @@ function nanswap_pay_gateway_init()
 
             if ($order) {
                 // translators: %s: error message
-                $order->update_status('on-hold', sprintf(__('Nanswap Pay Webhook Error: %s', 'nanswap-pay-woocommerce-main'), $error_msg));
+                $order->update_status('on-hold', sprintf(__('Nanswap Pay Webhook Error: %s', 'nanswap-pay-for-woocommerce-main'), $error_msg));
             }
 
 
