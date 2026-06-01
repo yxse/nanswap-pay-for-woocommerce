@@ -2,7 +2,7 @@
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 
-class WC_Gateway_Nanswap_Pay_Blocks_Support extends AbstractPaymentMethodType {
+class Nanswap_Pay_Blocks_Support extends AbstractPaymentMethodType {
 
     protected $name = 'nanswap_pay_gateway';
 
@@ -23,7 +23,7 @@ class WC_Gateway_Nanswap_Pay_Blocks_Support extends AbstractPaymentMethodType {
             'wc-nanswap-pay-blocks-integration',
             NANSWAP_PAY_FOR_WOOCOMMERCE_ASSET_URL . 'assets/js/nanswap-pay-blocks.js',
             array( 'wc-blocks-registry', 'wc-settings', 'wp-element', 'wp-html-entities' ),
-            VERSION_PFW,
+            NANSWAP_PAY_VERSION,
             true
         );
         return array( 'wc-nanswap-pay-blocks-integration' );

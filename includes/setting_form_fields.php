@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-$this->form_fields = apply_filters( 'wc_offline_form_fields', array(
+$this->form_fields = apply_filters( 'nanswap_pay_form_fields', array(
 
                 'enabled' => array(
                     'title' => __('Enable/Disable', 'nanswap-pay-woocommerce-main'),
@@ -25,7 +25,7 @@ $this->form_fields = apply_filters( 'wc_offline_form_fields', array(
                 'instructions' => array(
 					'title'       => __( 'Instructions', 'nanswap-pay-woocommerce-main' ),
 					'type'        => 'textarea',
-					'description' => __( '', 'nanswap-pay-woocommerce-main' ),
+					'description' => '',
 					'default'     => '',
 					'desc_tip'    => true,
 				),
