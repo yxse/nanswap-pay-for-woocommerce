@@ -547,6 +547,11 @@ function nanswap_pay_gateway_init()
             if ($auth_ok) {
                 $order = $this->lookup_order($request_data["order_id"]);
 
+                // don't process if payout method is dynamic, as funds could be sent to a different address than the merchant's 
+                if (isset($request_data['payout_method']) && $request_data['payout_method'] === 'dynamic') {
+                    $error_msg = 'Dynamic payout method not supported.';
+                    $order = false;
+                }
                 if ($order !== false) {
                     $payment_currency = strtoupper($request_data["price_currency"]);
                     if ($payment_currency == $order->get_currency()) {
