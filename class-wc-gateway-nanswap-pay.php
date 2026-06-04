@@ -550,22 +550,23 @@ function nanswap_pay_gateway_init()
                 // don't process if payout method is dynamic, as funds could be sent to a different address than the merchant's 
                 if (isset($request_data['payout_method']) && $request_data['payout_method'] === 'dynamic') {
                     $error_msg = 'Dynamic payout method not supported.';
-                    $order = false;
                 }
-                if ($order !== false) {
-                    $payment_currency = strtoupper($request_data["price_currency"]);
-                    if ($payment_currency == $order->get_currency()) {
-                        if ($request_data["price_amount"] >= $order->get_total()) {
-                            print "IPN check OK\n";
-                            return true;
+                else {
+                    if ($order !== false) {
+                        $payment_currency = strtoupper($request_data["price_currency"]);
+                        if ($payment_currency == $order->get_currency()) {
+                            if ($request_data["price_amount"] >= $order->get_total()) {
+                                print "IPN check OK\n";
+                                return true;
+                            } else {
+                                $error_msg = "Amount received is less than the total!";
+                            }
                         } else {
-                            $error_msg = "Amount received is less than the total!";
+                            $error_msg = "Original currency doesn't match! Received: " . esc_html($payment_currency) . ", Expected: " . esc_html($order->get_currency());
                         }
                     } else {
-                        $error_msg = "Original currency doesn't match! Received: " . esc_html($payment_currency) . ", Expected: " . esc_html($order->get_currency());
+                        $error_msg = "Could not find order info for order ";
                     }
-                } else {
-                    $error_msg = "Could not find order info for order ";
                 }
             }
 
