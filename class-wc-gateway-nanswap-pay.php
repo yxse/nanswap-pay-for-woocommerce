@@ -545,17 +545,17 @@ function nanswap_pay_gateway_init()
             }
 
             if ($auth_ok) {
-                $order = $this->lookup_order($request_data["order_id"]);
+                $order = $this->lookup_order($request_data["invoicePartnerId"]);
 
                 // don't process if payout method is dynamic, as funds could be sent to a different address than the merchant's 
-                if (isset($request_data['payout_method']) && $request_data['payout_method'] === 'dynamic') {
+                if (isset($request_data['payoutMethod']) && $request_data['payoutMethod'] === 'dynamic') {
                     $error_msg = 'Dynamic payout method not supported.';
                 }
                 else {
                     if ($order !== false) {
-                        $payment_currency = strtoupper($request_data["price_currency"]);
+                        $payment_currency = strtoupper($request_data["priceCurrency"]);
                         if ($payment_currency == $order->get_currency()) {
-                            if ($request_data["price_amount"] >= $order->get_total()) {
+                            if ($request_data["priceAmount"] >= $order->get_total()) {
                                 print "IPN check OK\n";
                                 return true;
                             } else {
@@ -600,7 +600,7 @@ function nanswap_pay_gateway_init()
 
             $request_json = file_get_contents('php://input');
             $request_data = json_decode($request_json, true);
-            $order = $this->lookup_order($request_data["order_id"]);
+            $order = $this->lookup_order($request_data["invoicePartnerId"]);
 
             $order_status = $order->get_status();
 
@@ -608,7 +608,7 @@ function nanswap_pay_gateway_init()
                 $order->update_status('completed', 'Order has been paid.');
             } else if ($request_data["status"] == "underpaid") {
                 $order->update_status('on-hold', 'Order is on hold.');
-                $order->add_order_note('Your payment is partially paid. Please contact contact@nanswap.com Amount received: ' . $request_data["payout_amount"] . ' ' . $request_data["payout_currency"]);
+                $order->add_order_note('Your payment is partially paid. Please contact contact@nanswap.com Amount received: ' . $request_data["payoutAmount"] . ' ' . $request_data["payoutCurrency"]);
             } else if ($request_data["status"] == "confirming") {
                 $order->update_status('processing', 'Order is processing.');
             } else if ($request_data["status"] == "confirmed") {
