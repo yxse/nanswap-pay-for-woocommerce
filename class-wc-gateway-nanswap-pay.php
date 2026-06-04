@@ -548,16 +548,16 @@ function nanswap_pay_gateway_init()
                 $order = $this->lookup_order($request_data["order_id"]);
 
                 if ($order !== false) {
-                    $payment_currency = strtoupper($request_data["payout_currency"]);
-                    if ($payment_currency == ($order->get_currency() || $payment_currency)) {
-                        if ($request_data["payout_amount"] >= $order->get_total()) {
+                    $payment_currency = strtoupper($request_data["price_currency"]);
+                    if ($payment_currency == $order->get_currency()) {
+                        if ($request_data["price_amount"] >= $order->get_total()) {
                             print "IPN check OK\n";
                             return true;
                         } else {
                             $error_msg = "Amount received is less than the total!";
                         }
                     } else {
-                        $error_msg = "Original currency doesn't match!";
+                        $error_msg = "Original currency doesn't match! Received: " . esc_html($payment_currency) . ", Expected: " . esc_html($order->get_currency());
                     }
                 } else {
                     $error_msg = "Could not find order info for order ";
@@ -600,9 +600,9 @@ function nanswap_pay_gateway_init()
 
             if ($request_data["status"] == "completed") {
                 $order->update_status('completed', 'Order has been paid.');
-            } else if ($request_data["status"] == "partially_paid") {
-                $order->update_status('on-hold', 'Order is holded.');
-                $order->add_order_note('Your payment is partially paid. Please contact contact@nanswap.com Amount received: ' . $request_data["actually_paid"] . " " . $request_data["payout_currency"]);
+            } else if ($request_data["status"] == "underpaid") {
+                $order->update_status('on-hold', 'Order is on hold.');
+                $order->add_order_note('Your payment is partially paid. Please contact contact@nanswap.com Amount received: ' . $request_data["payout_amount"] . ' ' . $request_data["payout_currency"]);
             } else if ($request_data["status"] == "confirming") {
                 $order->update_status('processing', 'Order is processing.');
             } else if ($request_data["status"] == "confirmed") {
